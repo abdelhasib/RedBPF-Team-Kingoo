@@ -1,0 +1,104 @@
+[package]
+name = "ingraind"
+version = "1.0.0"
+authors = ["Peter Parkanyi <peter@redsift.io>"]
+license = "GPL-3.0"
+description = "eBPF-based system monitoring agent"
+repository = "https://github.com/redsift/ingraind"
+build = "build.rs"
+edition = "2018"
+
+[build-dependencies]
+cargo-bpf = { version = "^1.2", default-features = false, features = ["build"] }
+
+[build-dependencies.capnpc]
+version = "^0.14"
+optional = true
+
+[dependencies]
+actix = "0.10"
+futures = "0.3"
+tokio = { version = "0.2", features = ["udp", "time", "stream"]}
+bytes = "1.0"
+mio = "0.6"
+
+failure = "0.1"
+lazy_static = "1.1.0"
+
+lazy-socket = "0.3"
+redbpf = "^1.2"
+redbpf-probes = "^1.2"
+
+serde = "^1.0"
+serde_derive = "^1.0"
+serde_json = "^1.0"
+toml = "^0.5"
+
+rustls = "0.19"
+metrohash = "1"
+regex = "1.4"
+
+log = { version = "^0.4", features = ["serde"] }
+env_logger = "^0.8.3"
+syslog = "^5.0"
+
+rayon = "1.4.1"
+
+dns-parser = "0.8"
+hdrhistogram = { version = "7.2", default-features = false }
+
+kube = "0.50.0"
+k8s-openapi = { version = "0.11.0", default-features = false, features = ["v1_15"] }
+
+bollard = "0.10"
+chrono = "0.4"
+
+ingraind-probes = { path = "ingraind-probes" }
+
+[dependencies.hyper]
+version = "0.14"
+optional = true
+
+[dependencies.hyper-rustls]
+version = "0.22"
+features = ["webpki-roots"]
+optional = true
+
+[dependencies.cadence]
+version =  "0.25"
+optional = true
+
+[dependencies.capnp]
+version = "0.14"
+optional = true
+
+[dependencies.rusoto_core]
+version = "0.46.0"
+default-features = false
+features = ["rustls"]
+optional = true
+
+[dependencies.rusoto_s3]
+version = "0.46.0"
+default-features = false
+features = ["rustls"]
+optional = true
+
+[dev-dependencies]
+criterion = "0.3"
+
+[[bench]]
+name = "aggregator"
+harness = false
+
+[features]
+default = ["statsd-backend", "http-backend", "capnp-encoding"]
+s3-backend = ["rusoto_core", "rusoto_s3"]
+statsd-backend = ["cadence"]
+http-backend = ["hyper", "hyper-rustls"]
+capnp-encoding = ["capnp", "capnpc"]
+
+[profile.release]
+lto = "thin"
+opt-level = 3
+debug = true
