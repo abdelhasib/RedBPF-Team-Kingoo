@@ -1,0 +1,43 @@
+[package]
+name = "ingraind-probes"
+version = "0.1.0"
+edition = '2018'
+
+[dependencies]
+cty = "0.2"
+memoffset = "0.6.1"
+redbpf-macros = "^1.2"
+redbpf-probes = "^1.2"
+unroll = "0.1"
+
+[features]
+default = []
+probes = []
+
+[lib]
+path = "src/lib.rs"
+
+[[bin]]
+name = "syscalls"
+path = "src/syscalls/main.rs"
+required-features = ["probes"]
+
+[[bin]]
+name = "dns"
+path = "src/dns/main.rs"
+required-features = ["probes"]
+
+[[bin]]
+name = "network"
+path = "src/network/main.rs"
+required-features = ["probes"]
+
+[[bin]]
+name = "tls"
+path = "src/tls/main.rs"
+required-features = ["probes"]
+
+[[bin]]
+name = "file"
+path = "src/file/main.rs"
+required-features = ["probes"]
